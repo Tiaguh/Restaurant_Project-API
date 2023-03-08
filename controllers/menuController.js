@@ -19,7 +19,7 @@ routes.post('/add-item', async (req, res) => {
 
 });
 
-routes.put('/update-item/:id', async (req, res) => {
+routes.post('/update-item/:id', async (req, res) => {
     const itemId = req.params.id
   
     const { itemName, itemDescription, itemPrice } = req.body;
