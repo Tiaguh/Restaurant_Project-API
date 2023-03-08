@@ -19,10 +19,28 @@ routes.post('/add-item', async (req, res) => {
 
 });
 
+routes.put('/update-item/:id', async (req, res) => {
+    const itemId = req.params.id
+  
+    const { itemName, itemDescription, itemPrice } = req.body;
+  
+    if (!itemName || !itemDescription || !itemPrice) res.status(400).json({ message: "Insira todos os dados" })
+  
+    try {
+      await db.updateItem(itemName, itemDescription, itemPrice, itemId);
+  
+      res.status(200).send({ message: "Atualizado com sucesso!" });
+    } catch (err) {
+      res.status(200).send(err);
+    }
+  })
+
 routes.get('/get-items', async (req, res) => {
   let result = await db.getItems()
 
   res.status(200).json(result[0]);
 })
+
+
 
 export default routes;
