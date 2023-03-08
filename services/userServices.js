@@ -37,4 +37,4 @@ async function deleteItem(itemId) {
   conn.end();
 }
 
-export default { createItem, getItems, updateItem };
+export default { createItem, getItems, updateItem, deleteItem };
