@@ -44,12 +44,12 @@ routes.get('/get-items', async (req, res) => {
 routes.delete('/delete-item/:id', async (req, res) => {
   const itemId = req.params.id
 
-  const { itemName, itemDescription, itemPrice } = req.body;
+  if (!itemId) res.status(400).json({message: "Não foi possível apagar"})
 
   try {
-    await db.deleteItem(itemName, itemDescription, itemPrice, itemId);
+    await db.deleteItem(itemId);
 
-    res.status(200).send({ message: "Atualizado com sucesso!" });
+    res.status(200).send({ message: "Excluído com sucesso!" });
   } catch (err) {
     res.status(200).send(err);
   }
