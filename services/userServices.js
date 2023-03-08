@@ -10,15 +10,15 @@ async function createItem(itemName, itemDescription, itemPrice) {
 }
 
 async function updateItem(itemName, itemDescription, itemPrice, itemId) {
-    const sql = "UPDATE Menu SET `item_name` = ?, `item_description` = ?, `item_price` = ? WHERE id_item = ?"
-    const dados = [itemName, itemDescription, itemPrice, itemId];
-  
-    const conn = await database.connect();
-    conn.query(sql, dados);
-    conn.end();
-  }
+  const sql = "UPDATE Menu SET `item_name` = ?, `item_description` = ?, `item_price` = ? WHERE id_item = ?"
+  const dados = [itemName, itemDescription, itemPrice, itemId];
 
-async function getItems(){
+  const conn = await database.connect();
+  conn.query(sql, dados);
+  conn.end();
+}
+
+async function getItems() {
   const sql = "SELECT * FROM Menu"
 
   const conn = await database.connect();
@@ -26,6 +26,15 @@ async function getItems(){
   conn.end()
 
   return results
+}
+
+async function deleteItem(itemId) {
+  const sql = "DELETE FROM Menu WHERE id_item = ?"
+  const dados = [itemId];
+
+  const conn = await database.connect();
+  conn.query(sql, dados);
+  conn.end();
 }
 
 export default { createItem, getItems, updateItem };
