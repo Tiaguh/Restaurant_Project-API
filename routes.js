@@ -1,5 +1,5 @@
 import express from "express";
-import managementItem from './controllers/menuController.js'
+import managementItem from './controllers/itemController.js'
 
 const route = express();
 
