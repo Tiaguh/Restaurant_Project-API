@@ -1,55 +1,32 @@
 import express from 'express';
-import db from '../services/loginServices.js';
+import db from '../services/loginService.js';
+import cookieParser from 'cookie-parser';
 
-import { generatePassword } from '../helpers/loginActions.js';
-import { generatedToken } from '../helpers/loginActions.js';
+const routes = express.Router();
 
-const router = express.Router();
+routes.use(cookieParser());
 
-router.post('/', async (req, res) => {
+routes.post('/', async (req, res) => {
   const { email, password } = req.body;
 
-
-  if (!email || !password) res.status(400).json({ message: "Insira todos os dados" })
+  if (!email || !password) res.status(400).json({ message: "Insira todos os dados" });
 
   try {
-
-    const users = await db.login(email, password);
+    const users = await db.Login(email, password);
 
     if (users.length > 0) {
-      const id_user = users[0].id_usuario;
-      const name_user = users[0].nome;
-      const email_user = users[0].email;
-      const type_user = users[0].tipo_usuario;
+      const user = users[0];
+      const userId = user.id_usuario;
 
-      const token = generatedToken(id_user, name_user, email_user, type_user);
-      res.status(200).send({ message: 'Login efetuado com sucesso', token });
+      res.cookie('userId', userId, { httpOnly: true, maxAge: 3600000 }); // O cookie expira em 1 hora (3600000 milissegundos)
+
+      res.status(200).json({ message: 'Login bem-sucedido' });
     } else {
-      res.status(401).send({ message: 'Login incorreto' });
+      res.status(401).json({ message: 'Email ou senha incorretos.' });
     }
   } catch (error) {
-    res.status(500).send({ message: `Houve um erro no banco de dados. ${error}` })
+    res.status(500).json({ message: `Erro no login. Tente novamente. ${error}` });
   }
 });
 
-router.post('/reset', async (req, res) => {
-
-  const { email } = req.body;
-
-  try {
-    const user = email.db.checkEmail(email);
-
-    if (user.length > 0) {
-      const newPassword = generatePassword();
-      await db.changePassword(email, newPassword);
-      res.status(200).send({ message: `Nova senha ${newPassword}` });
-    } else {
-      res.status(404).send({ message: `Usuário não encontrado` });
-    }
-  } catch (error) {
-    res.status(500).send({ message: `Houve um erro no banco de dados. ${error}` })
-  }
-
-})
-
-export default router;
+export default routes;

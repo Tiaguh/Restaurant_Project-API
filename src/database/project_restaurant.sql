@@ -20,6 +20,13 @@ CREATE TABLE User (
     address VARCHAR(250)
 );
 
+CREATE TABLE Admin (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE Purchase (
     id_purchase INT NOT NULL AUTO_INCREMENT,
     methodo_pay VARCHAR(50) NOT NULL,
