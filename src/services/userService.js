@@ -9,4 +9,16 @@ async function createUser(name, email, password) {
   conn.end();
 }
 
-export default { createUser };
+async function getUser(id) {
+  const sql = "SELECT name FROM User WHERE id = ?";
+  const dados = [id];
+
+  const conn = await database.connect();
+  const [rows] = await conn.query(sql, dados);
+  conn.end();
+
+  return rows[0];
+}
+
+
+export default { createUser, getUser };

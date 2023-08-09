@@ -40,7 +40,6 @@ routes.get('/get-items', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Erro ao obter os itens." });
   }
-
 })
 
 routes.delete('/delete-item/:id', async (req, res) => {
