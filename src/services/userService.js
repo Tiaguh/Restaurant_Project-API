@@ -10,7 +10,7 @@ async function createUser(name, email, password) {
 }
 
 async function getUser(id) {
-  const sql = "SELECT name FROM User WHERE id = ?";
+  const sql = "SELECT id, name FROM User WHERE id = ?";
   const dados = [id];
 
   const conn = await database.connect();
@@ -19,6 +19,5 @@ async function getUser(id) {
 
   return rows[0];
 }
-
 
 export default { createUser, getUser };

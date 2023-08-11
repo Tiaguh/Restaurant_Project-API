@@ -15,16 +15,15 @@ routes.post('/create-user', async (req, res) => {
 
 routes.get('/get-user/:id', async (req, res) => {
     const { id } = req.params;
-  
+
     if (!id) return res.status(400).json({ message: "Não foi possível identificar o usuário" });
-  
+
     try {
-      const user = await db.getUser(id);
-      res.status(200).json(user);
+        const user = await db.getUser(id);
+        res.status(200).json(user);
     } catch (err) {
-      res.status(500).json({ error: "Não foi possível encontrar o usuário" });
+        res.status(500).json({ error: "Não foi possível encontrar o usuário" });
     }
-  });
-  
+});
 
 export default routes;
