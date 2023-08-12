@@ -50,4 +50,23 @@ routes.get("/get-items-cart/:user_id", async (req, res) => {
     }    
 });
 
+routes.delete("/remove-from-cart/:user_id/:item_id", async (req, res) => {
+    const { user_id, item_id } = req.params;
+
+    try {
+        const itemInCart = await db.checkItemInCart(user_id, item_id);
+
+        if (itemInCart) {
+            // Remover o item do carrinho
+            await db.removeItemFromCart(user_id, item_id);
+            res.status(200).json({ message: "Item removido do carrinho com sucesso!" });
+        } else {
+            res.status(404).json({ message: "Item não encontrado no carrinho do usuário" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao remover item do carrinho", error: error.message });
+    }
+});
+
+
 export default routes;

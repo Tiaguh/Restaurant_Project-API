@@ -47,7 +47,7 @@ async function addItemCart(user_id, item_id) {
 }
 
 async function getCartItems(user_id) {
-    const sql = "SELECT m.* FROM Cart c JOIN MenuItem m ON c.item_id = m.item_id WHERE c.user_id = ?";
+    const sql = "SELECT m.*, c.quantity FROM Cart c JOIN MenuItem m ON c.item_id = m.item_id WHERE c.user_id = ?";
     const data = [user_id];
 
     const conn = await database.connect();
@@ -57,4 +57,13 @@ async function getCartItems(user_id) {
     return rows;
 }
 
-export default { getUser, addItemCart, checkItemInCart, getItem, getCartItems };
+async function removeItemFromCart(user_id, item_id) {
+    const sql = "DELETE FROM Cart WHERE user_id = ? AND item_id = ?";
+    const data = [user_id, item_id];
+  
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+  }
+
+export default { getUser, addItemCart, checkItemInCart, getItem, getCartItems, removeItemFromCart };
