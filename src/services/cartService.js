@@ -1,13 +1,16 @@
 import database from '../repository/connection.js';
 
-async function getUser(id) {
+// Verifica se o ID do informado existe na tabela User.
+async function getUser(user_id) {
     const sql = "SELECT * FROM User WHERE id = ?";
-    const data = [id];
+    const data = [user_id];
 
     try {
         const conn = await database.connect();
         const [rows] = await conn.query(sql, data);
         conn.end();
+
+        // Retorna o primeiro resultado encontrado caso o usuário existe, ou null se nenhum resultado for encontrado.
 
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
@@ -15,17 +18,21 @@ async function getUser(id) {
     }
 }
 
-async function getItem(id) {
+// Verifica se o ID informado corresponde a algum item na tabela Menu.
+
+async function getItem(user_id) {
     const sql = "SELECT * FROM MenuItem WHERE item_id = ?";
-    const data = [id];
+    const data = [user_id];
 
     const conn = await database.connect();
     const [rows] = await conn.query(sql, data);
     conn.end();
 
+    // Retorna o primeiro resultado encontrado caso o item exista, ou null se nenhum resultado for encontrado.
     return rows.length > 0 ? rows[0] : null;
 }
 
+// Verifica se o item já está no carrinho do usuário.
 async function checkItemInCart(user_id, item_id) {
     const sql = "SELECT * FROM Cart WHERE user_id = ? AND item_id = ?";
     const data = [user_id, item_id];
@@ -37,6 +44,7 @@ async function checkItemInCart(user_id, item_id) {
     return rows.length > 0;
 }
 
+// Adiciona um item ao carrinho de um usuário.
 async function addItemCart(user_id, item_id) {
     const sql = "INSERT INTO Cart (user_id, item_id) VALUES (?, ?)";
     const data = [user_id, item_id];
@@ -46,6 +54,7 @@ async function addItemCart(user_id, item_id) {
     conn.end();
 }
 
+// Obtém todos os itens no carrinho de um usuário, incluindo a quantidade de cada item.
 async function getCartItems(user_id) {
     const sql = "SELECT m.*, c.quantity FROM Cart c JOIN MenuItem m ON c.item_id = m.item_id WHERE c.user_id = ?";
     const data = [user_id];
@@ -57,13 +66,34 @@ async function getCartItems(user_id) {
     return rows;
 }
 
+// Remove um item do carrinho de um usuário.
 async function removeItemFromCart(user_id, item_id) {
     const sql = "DELETE FROM Cart WHERE user_id = ? AND item_id = ?";
     const data = [user_id, item_id];
-  
+
     const conn = await database.connect();
     await conn.query(sql, data);
     conn.end();
-  }
+}
 
-export default { getUser, addItemCart, checkItemInCart, getItem, getCartItems, removeItemFromCart };
+// Aumenta a quantidade de um item no carrinho de um usuário.
+async function increaseCartItem(user_id, item_id) {
+    const sql = "UPDATE Cart SET quantity = quantity + 1 WHERE user_id = ? AND item_id = ?;"
+    const data = [user_id, item_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
+// Diminui a quantidade de um item no carrinho de um usuário.
+async function decreaseCartItem(user_id, item_id) {
+    const sql = "UPDATE Cart SET quantity = quantity - 1 WHERE user_id = ? AND item_id = ?;"
+    const data = [user_id, item_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
+export default { getUser, getItem, addItemCart, checkItemInCart, getCartItems, removeItemFromCart, increaseCartItem, decreaseCartItem };
