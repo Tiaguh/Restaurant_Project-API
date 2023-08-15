@@ -20,9 +20,9 @@ async function getUser(user_id) {
 
 // Verifica se o ID informado corresponde a algum item na tabela Menu.
 
-async function getItem(user_id) {
-    const sql = "SELECT * FROM MenuItem WHERE item_id = ?";
-    const data = [user_id];
+async function getItem(item_id) {
+    const sql = "SELECT * FROM Menu WHERE id = ?";
+    const data = [item_id];
 
     const conn = await database.connect();
     const [rows] = await conn.query(sql, data);
@@ -56,7 +56,7 @@ async function addItemCart(user_id, item_id) {
 
 // Obtém todos os itens no carrinho de um usuário, incluindo a quantidade de cada item.
 async function getCartItems(user_id) {
-    const sql = "SELECT m.*, c.quantity FROM Cart c JOIN MenuItem m ON c.item_id = m.item_id WHERE c.user_id = ?";
+    const sql = "SELECT m.*, c.quantity FROM Cart c JOIN Menu m ON c.id = m.id WHERE c.user_id = ?";
     const data = [user_id];
 
     const conn = await database.connect();

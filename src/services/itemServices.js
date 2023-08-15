@@ -2,7 +2,7 @@ import database from '../repository/connection.js';
 
 async function createItem(itemName, itemDescription, itemPrice) {
   try {
-    const sql = "INSERT INTO MenuItem (item_name, item_description, item_price) VALUES (?, ?, ?)";
+    const sql = "INSERT INTO Menu (name, description, price) VALUES (?, ?, ?)";
     const dados = [itemName, itemDescription, itemPrice];
 
     const conn = await database.connect();
@@ -15,7 +15,7 @@ async function createItem(itemName, itemDescription, itemPrice) {
 
 async function updateItem(itemName, itemDescription, itemPrice, itemId) {
   try {
-    const sql = "UPDATE MenuItem SET `item_name` = ?, `item_description` = ?, `item_price` = ? WHERE item_id = ?";
+    const sql = "UPDATE Menu SET `name` = ?, `description` = ?, `price` = ? WHERE item_id = ?";
     const dados = [itemName, itemDescription, itemPrice, itemId];
 
     const conn = await database.connect();
@@ -28,7 +28,7 @@ async function updateItem(itemName, itemDescription, itemPrice, itemId) {
 
 async function getItems() {
   try {
-    const sql = "SELECT * FROM MenuItem";
+    const sql = "SELECT * FROM Menu";
 
     const conn = await database.connect();
     const results = await conn.query(sql);
@@ -42,7 +42,7 @@ async function getItems() {
 
 async function deleteItem(itemId) {
   try {
-    const sql = "DELETE FROM MenuItem WHERE item_id = ?";
+    const sql = "DELETE FROM Menu WHERE id = ?";
     const dados = [itemId];
 
     const conn = await database.connect();
