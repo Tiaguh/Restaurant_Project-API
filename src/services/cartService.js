@@ -56,7 +56,7 @@ async function addItemCart(user_id, item_id) {
 
 // Obtém todos os itens no carrinho de um usuário, incluindo a quantidade de cada item.
 async function getCartItems(user_id) {
-    const sql = "SELECT m.*, c.quantity FROM Cart c JOIN Menu m ON c.id = m.id WHERE c.user_id = ?";
+    const sql = "SELECT m.*, c.quantity FROM Cart c JOIN Menu m ON c.item_id = m.id WHERE c.user_id = ?;";
     const data = [user_id];
 
     const conn = await database.connect();
