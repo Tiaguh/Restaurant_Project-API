@@ -127,7 +127,7 @@ routes.put("/decrease-cart-item/:user_id/:item_id", async (req, res) => {
         const itemInCart = await db.checkItemInCart(user_id, item_id);
 
         if (itemInCart === true) {
-            
+
             await db.decreaseCartItem(user_id, item_id);
             res.status(200).json({ message: "Quantidade do item diminuída no carrinho com sucesso!" });
         } else {
@@ -137,5 +137,19 @@ routes.put("/decrease-cart-item/:user_id/:item_id", async (req, res) => {
         res.status(500).json({ message: "Erro ao diminuir a quantidade do item no carrinho" });
     }
 });
+
+routes.post("/finish-purchase/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        //Verficando se o usuário e o item existem.
+
+        const userExists = await db.getUser(user_id);
+        if (!userExists) return res.status(404).json({ message: "Usuário não encontrado" });
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao finalizar a compra" });
+    }
+
+})
 
 export default routes;

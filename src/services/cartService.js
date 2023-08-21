@@ -56,7 +56,7 @@ async function addItemCart(user_id, item_id) {
 
 // Obtém todos os itens no carrinho de um usuário, incluindo a quantidade de cada item.
 async function getCartItems(user_id) {
-    const sql = "SELECT m.*, c.quantity FROM Cart c JOIN Menu m ON c.item_id = m.id WHERE c.user_id = ?;";
+    const sql = "SELECT Menu.*, Cart.quantity FROM Cart JOIN Menu ON Cart.item_id = Menu.id WHERE Cart.user_id = ?;";
     const data = [user_id];
 
     const conn = await database.connect();
@@ -90,6 +90,15 @@ async function increaseCartItem(user_id, item_id) {
 async function decreaseCartItem(user_id, item_id) {
     const sql = "UPDATE Cart SET quantity = quantity - 1 WHERE user_id = ? AND item_id = ?;"
     const data = [user_id, item_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
+async function finishPurchase (user_id) {
+    const sql = ""
+    const data = [user_id]
 
     const conn = await database.connect();
     await conn.query(sql, data);
