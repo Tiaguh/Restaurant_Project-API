@@ -57,12 +57,12 @@ async function addItemCart(user_id, item_id) {
 // Obtém todos os itens no carrinho de um usuário, incluindo a quantidade de cada item.
 async function getCartItems(user_id) {
     const sql = `
-    SELECT
+      SELECT
         M.id,
         M.description,
         M.name AS item_name,
         C.quantity AS quantity,
-        (C.quantity * M.price) AS total_price
+        C.quantity * M.price AS total_price
       FROM
         Cart AS C
       JOIN
@@ -76,7 +76,13 @@ async function getCartItems(user_id) {
     const [rows] = await conn.query(sql, data);
     conn.end();
 
-    return rows;
+    // Convertendo o total_price de string para número inteiro
+    const cartItems = rows.map(item => ({
+        ...item,
+        total_price: parseInt(item.total_price)
+    }));
+
+    return cartItems;
 }
 
 // Remove um item do carrinho de um usuário.
