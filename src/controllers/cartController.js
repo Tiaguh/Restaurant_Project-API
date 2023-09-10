@@ -79,18 +79,63 @@ routes.delete("/remove-from-cart/:user_id/:item_id", async (req, res) => {
     }
 });
 
-// routes.post("/finish-purchase/:user_id", async (req, res) => {
-//     const { user_id } = req.params;
+// Rota para aumentar a quantidade de um item no carrinho.
+routes.put("/increase-cart-item/:user_id/:item_id", async (req, res) => {
+    const { user_id, item_id } = req.params;
 
-//     try {
-//         //Verficando se o usuário e o item existem.
+    try {
+        //Verficando se o usuário e o item existem.
 
-//         const userExists = await db.getUser(user_id);
-//         if (!userExists) return res.status(404).json({ message: "Usuário não encontrado" });
-//     } catch (error) {
-//         res.status(500).json({ message: "Erro ao finalizar a compra" });
-//     }
+        const userExists = await db.getUser(user_id);
+        if (!userExists) return res.status(404).json({ message: "Usuário não encontrado" });
 
-// })
+        const itemExists = await db.getItem(item_id);
+        if (!itemExists) return res.status(404).json({ message: "Item não encontrado" });
+
+        // Verificando se o item está no carrinho.]
+        // Existindo o item a quantidade do item é aumentada no carrinho.
+
+        const itemInCart = await db.checkItemInCart(user_id, item_id);
+
+        if (itemInCart === true) {
+            // Aumentando a quantidade do item no carrinho.
+            await db.increaseCartItem(user_id, item_id);
+            res.status(200).json({ message: "Quantidade do item aumentada no carrinho com sucesso!" });
+        } else {
+            res.status(404).json({ message: "Item não encontrado no carrinho do usuário" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao aumentar a quantidade do item no carrinho" });
+    }
+});
+
+// Rota para diminuir a quantidade de um item no carrinho
+routes.put("/decrease-cart-item/:user_id/:item_id", async (req, res) => {
+    const { user_id, item_id } = req.params;
+
+    try {
+        //Verficando se o usuário e o item existem.
+
+        const userExists = await db.getUser(user_id);
+        if (!userExists) return res.status(404).json({ message: "Usuário não encontrado" });
+
+        const itemExists = await db.getItem(item_id);
+        if (!itemExists) return res.status(404).json({ message: "Item não encontrado" });
+
+        // Verificando se o item está no carrinho.
+        // Existindo o item a quantidade do item é diminuida no carrinho.
+        const itemInCart = await db.checkItemInCart(user_id, item_id);
+
+        if (itemInCart === true) {
+
+            await db.decreaseCartItem(user_id, item_id);
+            res.status(200).json({ message: "Quantidade do item diminuída no carrinho com sucesso!" });
+        } else {
+            res.status(404).json({ message: "Item não encontrado no carrinho do usuário" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao diminuir a quantidade do item no carrinho" });
+    }
+});
 
 export default routes;

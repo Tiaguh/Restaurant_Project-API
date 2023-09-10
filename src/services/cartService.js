@@ -89,6 +89,26 @@ async function removeItemFromCart(user_id, item_id) {
     conn.end();
 }
 
+// Aumenta a quantidade de um item no carrinho de um usuário.
+async function increaseCartItem(user_id, item_id) {
+    const sql = "UPDATE Cart SET quantity = quantity + 1 WHERE user_id = ? AND item_id = ?;"
+    const data = [user_id, item_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
+// Diminui a quantidade de um item no carrinho de um usuário.
+async function decreaseCartItem(user_id, item_id) {
+    const sql = "UPDATE Cart SET quantity = quantity - 1 WHERE user_id = ? AND item_id = ?;"
+    const data = [user_id, item_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
 export default {
-    getUser, getItem, addItemCart, checkItemInCart, getCartItems, removeItemFromCart
+    getUser, getItem, addItemCart, checkItemInCart, getCartItems, removeItemFromCart, increaseCartItem, decreaseCartItem
 };
