@@ -61,7 +61,8 @@ async function getCartItems(user_id) {
         M.id,
         M.description,
         M.name,
-        M.price
+        M.price,
+        C.quantity
     FROM
         Cart AS C
     JOIN

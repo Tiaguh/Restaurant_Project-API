@@ -21,10 +21,11 @@ async function newRequest(user_id) {
     const sql = `
         INSERT INTO 
             Requests 
-                (item_id, user_id)
+                (item_id, user_id, quantity)
         SELECT 
             item_id, 
-            user_id
+            user_id,
+            quantity
         FROM 
             Cart 
         WHERE 
