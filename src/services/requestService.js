@@ -40,7 +40,28 @@ async function newRequest(user_id) {
 }
 
 async function getRequests() {
-    const sql = "SELECT * FROM Requests";
+    const sql = `
+        SELECT
+            R.id, 
+            R.date, 
+            M.name, 
+            M.description, 
+            C.quantity
+        FROM 
+            Requests AS R
+        JOIN 
+            Menu AS M 
+        ON 
+            R.item_id = M.id
+        LEFT JOIN 
+            Cart AS C 
+        ON 
+            R.user_id = C.user_id 
+        AND 
+            R.item_id = C.item_id
+        ORDER BY 
+            R.id    
+    `;
 
     const conn = await database.connect();
     const [rows] = await conn.query(sql)
