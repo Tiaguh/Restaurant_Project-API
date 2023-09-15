@@ -46,13 +46,18 @@ async function getRequests() {
             R.date, 
             M.name, 
             M.description, 
-            C.quantity
+            C.quantity,
+            U.name
         FROM 
             Requests AS R
         JOIN 
             Menu AS M 
         ON 
             R.item_id = M.id
+        JOIN 
+            User AS U 
+        ON 
+            R.user_id = U.id
         LEFT JOIN 
             Cart AS C 
         ON 
@@ -60,7 +65,7 @@ async function getRequests() {
         AND 
             R.item_id = C.item_id
         ORDER BY 
-            R.id    
+            R.id
     `;
 
     const conn = await database.connect();
