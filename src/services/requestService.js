@@ -44,6 +44,7 @@ async function getRequests() {
         SELECT
             R.id, 
             R.date, 
+            R.hour,
             M.name, 
             M.description, 
             C.quantity,
