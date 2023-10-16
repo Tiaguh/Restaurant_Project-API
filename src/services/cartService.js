@@ -110,6 +110,15 @@ async function decreaseCartItem(user_id, item_id) {
     conn.end();
 }
 
+async function clearCart(user_id) {
+    const sql = "DELETE FROM Cart WHERE user_id = ?"
+    const data = [user_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
 export default {
-    getUser, getItem, addItemCart, checkItemInCart, getCartItems, removeItemFromCart, increaseCartItem, decreaseCartItem
+    getUser, getItem, addItemCart, checkItemInCart, getCartItems, removeItemFromCart, increaseCartItem, decreaseCartItem, clearCart
 };

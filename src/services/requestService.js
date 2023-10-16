@@ -42,7 +42,8 @@ async function newRequest(user_id) {
 async function getRequests() {
     const sql = `
         SELECT
-            R.id, 
+            R.id,
+            M.id AS item_id,
             R.date, 
             R.hour,
             M.name, 
@@ -65,6 +66,8 @@ async function getRequests() {
             R.user_id = C.user_id 
         AND 
             R.item_id = C.item_id
+        GROUP BY 
+            item_id
         ORDER BY 
             R.id
     `;

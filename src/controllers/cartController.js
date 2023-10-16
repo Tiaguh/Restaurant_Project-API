@@ -138,4 +138,22 @@ routes.put("/decrease-cart-item/:user_id/:item_id", async (req, res) => {
     }
 });
 
+routes.delete("/clear-cart/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+
+    //Verficando se o usuário e o item existem.
+    const userExists = await db.getUser(user_id);
+    if (!userExists) return res.status(404).json({ message: "Usuário não encontrado" });
+
+
+    // Função para limpar o carrinho do usuário assim que uma compra é feita.
+    try {
+        await db.clearCart(user_id);
+        res.status(200).send({ message: "Carrinho limpo com sucesso!" });
+    } catch (err) {
+        res.status(500).json({ message: "Erro ao limpar o carrinho." });
+    }
+
+});
+
 export default routes;
