@@ -21,6 +21,7 @@ CREATE TABLE User (
     name VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL
 );
 
 -- Guarda informações para administradores poderem logar.
@@ -33,13 +34,14 @@ CREATE TABLE Admin (
 
 -- Guarda os pedidos dos usuários.
 CREATE TABLE Requests (
-    id INT NOT NULL AUTO_INCREMENT,
+    id_request INT NOT NULL AUTO_INCREMENT,
     date DATE DEFAULT CURRENT_DATE,
     hour TIME DEFAULT CURRENT_TIME,
     item_id INT NOT NULL,
     user_id INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY(id),
+    STATUS VARCHAR(20) NOT NULL DEFAULT 'Pendente',
+    PRIMARY KEY(id_request),
     
     CONSTRAINT FK_item_request FOREIGN KEY(item_id) REFERENCES Menu(id),
     CONSTRAINT FK_user_request FOREIGN KEY(user_id) REFERENCES User(id)

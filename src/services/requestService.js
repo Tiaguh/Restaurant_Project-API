@@ -42,35 +42,26 @@ async function newRequest(user_id) {
 async function getRequests() {
     const sql = `
         SELECT
-            R.id,
-            M.id AS item_id,
-            R.date, 
-            R.hour,
-            M.name, 
-            M.description, 
-            C.quantity,
-            U.name
+            R.id_request,
+            U.name AS user_name,
+            COALESCE(GROUP_CONCAT(M.name, ' (', R.quantity, ')'), 'Nenhum item') AS item_requests
         FROM 
             Requests AS R
-        JOIN 
-            Menu AS M 
-        ON 
-            R.item_id = M.id
         JOIN 
             User AS U 
         ON 
             R.user_id = U.id
         LEFT JOIN 
-            Cart AS C 
+            Menu AS M 
         ON 
-            R.user_id = C.user_id 
-        AND 
-            R.item_id = C.item_id
+            R.item_id = M.id
         GROUP BY 
-            item_id
+            R.id_request, user_name
         ORDER BY 
-            R.id
-    `;
+          R.id_request;
+`;
+
+// COALESCE é uma função que concatena valores da coluna, nesse caso o nome do item com a quantidade.
 
     const conn = await database.connect();
     const [rows] = await conn.query(sql)
