@@ -10,7 +10,7 @@ CREATE TABLE Menu (
     name VARCHAR(45) NOT NULL,
     description VARCHAR(400) NOT NULL,
     price DECIMAL(5, 2) NOT NULL,
-    img VARCHAR(255),
+    image_url VARCHAR(255),
     PRIMARY KEY(id)
 );
 

@@ -1,37 +1,17 @@
 import express from 'express';
 import db from '../services/itemServices.js';
-import { storage } from '../firebaseConfig.js';
 
 const routes = express.Router();
 
-import multer from 'multer';
-const upload = multer({ storage: multer.memoryStorage() });
+routes.post('/add-item', async (req, res) => {
+  const { itemName, itemDescription, itemPrice, itemImage } = req.body;
 
-routes.post('/add-item', upload.single('itemImage'), async (req, res) => {
-  const { itemName, itemDescription, itemPrice } = req.body;
-
-  if (!itemName || !itemDescription || !itemPrice) {
-    res.status(400).json({ message: "Insira todos os dados" });
-    return;
-  }
-
-  const imageBuffer = req.file ? req.file.buffer : null;
-  if (!imageBuffer) {
-    res.status(400).json({ message: "Arquivo de imagem não encontrado" });
-    return;
-  }
+  if (!itemName || !itemDescription || !itemPrice) res.status(400).json({ message: "Insira todos os dados" })
 
   try {
-    const imageRef = storage.ref().child(`images/${req.file.originalname}`);
-    await imageRef.put(imageBuffer);
-
-    const imageUrl = await imageRef.getDownloadURL();
-
-    await db.createItem(itemName, itemDescription, itemPrice, imageUrl);
-
-    res.status(200).send({ message: "Adicionado com sucesso!", imageUrl });
+    await db.createItem(itemName, itemDescription, itemPrice, itemImage);
+    res.status(200).send({ message: "Adicionado com sucesso!" });
   } catch (err) {
-    console.error('Erro ao adicionar o item:', err);
     res.status(500).json({ error: "Erro ao adicionar o item." });
   }
 });
