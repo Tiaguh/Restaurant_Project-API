@@ -41,27 +41,32 @@ async function newRequest(user_id) {
 
 async function getRequests() {
     const sql = `
-        SELECT
-            R.id_request,
-            U.name AS user_name,
-            COALESCE(GROUP_CONCAT(M.name, ' (', R.quantity, ')'), 'Nenhum item') AS item_requests
-        FROM 
-            Requests AS R
-        JOIN 
-            User AS U 
-        ON 
-            R.user_id = U.id
-        LEFT JOIN 
-            Menu AS M 
-        ON 
-            R.item_id = M.id
-        GROUP BY 
-            R.id_request, user_name
-        ORDER BY 
-          R.id_request;
+    SELECT
+        R.id_request,
+        R.STATUS,
+        U.id AS user_id,
+        U.name AS user_name,
+        COALESCE(GROUP_CONCAT(M.name, ' (', R.quantity, ')'), 'Nenhum item') AS item_requests
+    FROM 
+        Requests AS R
+    JOIN 
+        User AS U 
+    ON 
+        R.user_id = U.id
+    LEFT JOIN 
+        Menu AS M 
+    ON 
+        R.item_id = M.id
+    WHERE 
+        R.STATUS = 'Pendente'
+    GROUP BY 
+        R.id_request, user_id, user_name
+    ORDER BY 
+        R.id_request;
+
 `;
 
-// COALESCE é uma função que concatena valores da coluna, nesse caso o nome do item com a quantidade.
+    // COALESCE é uma função que concatena valores da coluna, nesse caso o nome do item com a quantidade.
 
     const conn = await database.connect();
     const [rows] = await conn.query(sql)
@@ -71,4 +76,33 @@ async function getRequests() {
     return rows;
 }
 
-export default { getUser, newRequest, getRequests };
+async function deleteRequest(user_id) {
+    const sql = `
+        DELETE FROM
+            Requests 
+        WHERE 
+            user_id = ?
+    `;
+
+    const data = [user_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
+async function finalizeRequest(user_id) {
+    const sql = `
+        UPDATE Requests 
+        SET STATUS = 'FINALIZADO'
+        WHERE user_id = ? AND STATUS = 'Pendente';
+    `;
+
+    const data = [user_id];
+
+    const conn = await database.connect();
+    await conn.query(sql, data);
+    conn.end();
+}
+
+export default { getUser, newRequest, getRequests, deleteRequest, finalizeRequest };
