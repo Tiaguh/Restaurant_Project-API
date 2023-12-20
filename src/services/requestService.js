@@ -91,3 +91,18 @@ async function finalizeRequest(user_id) {
 }
 
 export default { getUser, newRequest, getRequests, finalizeRequest };
+
+// "
+// SELECT
+//   Requests.id_request,
+//   Requests.user_id,
+//   Requests.status,
+//   ItemRequests.item_id,
+//   ItemRequests.quantity
+// FROM
+//   Requests
+// JOIN
+//   ItemRequests ON Requests.id_request = ItemRequests.id_request
+// WHERE
+//  Requests.user_id = 1;
+// "

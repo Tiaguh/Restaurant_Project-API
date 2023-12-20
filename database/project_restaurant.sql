@@ -14,7 +14,6 @@ CREATE TABLE Menu (
     PRIMARY KEY(id)
 );
 
-
 -- Guarda as informações do usuário, como email e senha.
 CREATE TABLE User (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -32,19 +31,28 @@ CREATE TABLE Admin (
     password VARCHAR(255) NOT NULL
 );
 
--- Guarda os pedidos dos usuários.
+INSERT INTO Admin (name, email, password) VALUES ("Tiago", "tiagosingup@gmail.com", "12345");
+
+-- Tabela que guarda os pedidos dos usuários
 CREATE TABLE Requests (
     id_request INT NOT NULL AUTO_INCREMENT,
-    date DATE DEFAULT CURRENT_DATE,
-    hour TIME DEFAULT CURRENT_TIME,
-    item_id INT NOT NULL,
     user_id INT NOT NULL,
-    quantity INT NOT NULL,
     STATUS VARCHAR(20) NOT NULL DEFAULT 'Pendente',
-    PRIMARY KEY(id_request),
     
-    CONSTRAINT FK_item_request FOREIGN KEY(item_id) REFERENCES Menu(id),
+    PRIMARY KEY(id_request),    
     CONSTRAINT FK_user_request FOREIGN KEY(user_id) REFERENCES User(id)
+);
+
+-- Tabela que relaciona os itens aos pedidos (tabela de junção)
+CREATE TABLE ItemRequests (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_request INT NOT NULL,
+    item_id INT NOT NULL,
+    quantity INT NOT NULL,
+    
+    PRIMARY KEY(id),
+    CONSTRAINT FK_request_item FOREIGN KEY(id_request) REFERENCES Requests(id_request),
+    CONSTRAINT FK_item_request FOREIGN KEY(item_id) REFERENCES Menu(id)
 );
 
 -- Armazena os itens que o usuário coloca no carrinho.
@@ -53,8 +61,8 @@ CREATE TABLE Cart (
     item_id INT NOT NULL,
     user_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT '1',
+    
     PRIMARY KEY(id),
-
     CONSTRAINT FK_cart_item FOREIGN KEY(item_id) REFERENCES Menu(id),
     CONSTRAINT FK_cart_user FOREIGN KEY(user_id) REFERENCES User(id)
 );
