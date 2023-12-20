@@ -27,24 +27,6 @@ routes.post("/new-request/:user_id", async (req, res) => {
     }
 })
 
-routes.delete("/delete-request/:user_id", async (req, res) => {
-    const { user_id } = req.params;
-
-    try {
-        const userExists = await db.getUser(user_id);
-        if (!userExists) {
-            return res.status(404).json({ message: "Usuário não encontrado" });
-        }
-
-        await db.deleteRequest(user_id);
-        res.status(200).json({ message: "Pedido deletado com sucesso!" });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Não foi possível deletar o pedido" });
-    }
-});
-
 routes.put("/finalize-request/:user_id", async (req, res) => {
     const { user_id } = req.params;
 

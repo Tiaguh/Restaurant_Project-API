@@ -76,21 +76,6 @@ async function getRequests() {
     return rows;
 }
 
-async function deleteRequest(user_id) {
-    const sql = `
-        DELETE FROM
-            Requests 
-        WHERE 
-            user_id = ?
-    `;
-
-    const data = [user_id];
-
-    const conn = await database.connect();
-    await conn.query(sql, data);
-    conn.end();
-}
-
 async function finalizeRequest(user_id) {
     const sql = `
         UPDATE Requests 
@@ -105,4 +90,4 @@ async function finalizeRequest(user_id) {
     conn.end();
 }
 
-export default { getUser, newRequest, getRequests, deleteRequest, finalizeRequest };
+export default { getUser, newRequest, getRequests, finalizeRequest };
