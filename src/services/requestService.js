@@ -39,31 +39,26 @@ async function newRequest(user_id) {
     conn.end();
 }
 
-async function getRequests() {
+async function getAllRequests() {
     const sql = `
     SELECT
         R.id_request,
-        R.STATUS,
-        U.id AS user_id,
+        R.user_id,
         U.name AS user_name,
-        COALESCE(GROUP_CONCAT(M.name, ' (', R.quantity, ')'), 'Nenhum item') AS item_requests
-    FROM 
+        R.status,
+        GROUP_CONCAT(CONCAT(Menu.name, ' (', It.quantity, ')') SEPARATOR ', ') AS items
+    FROM
         Requests AS R
     JOIN 
-        User AS U 
-    ON 
-        R.user_id = U.id
-    LEFT JOIN 
-        Menu AS M 
-    ON 
-        R.item_id = M.id
-    WHERE 
-        R.STATUS = 'Pendente'
-    GROUP BY 
-        R.id_request, user_id, user_name
-    ORDER BY 
-        R.id_request;
-
+        ItemRequests AS It ON R.id_request = It.id_request
+    JOIN
+        Menu ON It.item_id = Menu.id
+    JOIN
+        User AS U ON R.user_id = U.id
+    WHERE
+        R.status = 'Pendente'
+    GROUP BY
+        R.id_request, R.user_id, R.status;
 `;
 
     // COALESCE é uma função que concatena valores da coluna, nesse caso o nome do item com a quantidade.
@@ -90,19 +85,5 @@ async function finalizeRequest(user_id) {
     conn.end();
 }
 
-export default { getUser, newRequest, getRequests, finalizeRequest };
+export default { getUser, newRequest, getAllRequests, finalizeRequest };
 
-// "
-// SELECT
-//   Requests.id_request,
-//   Requests.user_id,
-//   Requests.status,
-//   ItemRequests.item_id,
-//   ItemRequests.quantity
-// FROM
-//   Requests
-// JOIN
-//   ItemRequests ON Requests.id_request = ItemRequests.id_request
-// WHERE
-//  Requests.user_id = 1;
-// "
