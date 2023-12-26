@@ -52,7 +52,10 @@ CREATE TABLE ItemRequests (
     
     PRIMARY KEY(id),
     CONSTRAINT FK_request_item FOREIGN KEY(id_request) REFERENCES Requests(id_request),
-    CONSTRAINT FK_item_request FOREIGN KEY(item_id) REFERENCES Menu(id)
+    CONSTRAINT FK_item_request FOREIGN KEY(item_id) REFERENCES Menu(id),
+    
+    -- Adiciona a chave composta (id_request, item_id)
+    UNIQUE KEY (id_request, item_id)
 );
 
 -- Armazena os itens que o usuário coloca no carrinho.

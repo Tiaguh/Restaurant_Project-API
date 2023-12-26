@@ -21,7 +21,7 @@ routes.post("/add-item-cart/:user_id/:item_id", async (req, res) => {
 
         // Verificando se o item já está no carrinho.
         // Se o item já estiver no carrinho ele não é adicionado novamente.
-        if (itemInCart === true) {
+        if (itemInCart) {
             return res.status(409).json({ message: "O item já está no carrinho" });
         } else {
             // Se o item não estiver no carrinho ele é adicionado.
