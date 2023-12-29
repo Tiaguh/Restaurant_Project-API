@@ -19,22 +19,22 @@ async function updateItem(itemName, itemDescription, itemPrice, itemId) {
 }
 
 async function getItems() {
-    const sql = "SELECT * FROM Menu";
+  const sql = "SELECT * FROM Menu";
 
-    const conn = await database.connect();
-    const results = await conn.query(sql);
-    conn.end();
+  const conn = await database.connect();
+  const results = await conn.query(sql);
+  conn.end();
 
-    return results;
+  return results;
 }
 
 async function deleteItem(itemId) {
-    const sql = "DELETE FROM Menu WHERE id = ?";
-    const dados = [itemId];
+  const conn = await database.connect();
 
-    const conn = await database.connect();
-    await conn.query(sql, dados);
-    conn.end();
+  await conn.query("DELETE FROM ItemRequests WHERE item_id = ?", [itemId]);
+  await conn.query("DELETE FROM Menu WHERE id = ?", [itemId]);
+
+  conn.end();
 }
 
 export default { createItem, getItems, updateItem, deleteItem };

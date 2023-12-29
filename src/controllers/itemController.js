@@ -50,7 +50,6 @@ routes.delete('/delete-item/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Erro ao excluir o item." });
   }
-
 })
 
 
