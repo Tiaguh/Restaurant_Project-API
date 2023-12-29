@@ -2,19 +2,19 @@ import database from '../repository/connection.js';
 
 async function createItem(itemName, itemDescription, itemPrice, imageUrl) {
   const sql = "INSERT INTO Menu (name, description, price, image_url) VALUES (?, ?, ?, ?)";
-  const dados = [itemName, itemDescription, itemPrice, imageUrl];
+  const data = [itemName, itemDescription, itemPrice, imageUrl];
 
   const conn = await database.connect();
-  await conn.query(sql, dados);
+  await conn.query(sql, data);
   conn.end();
 }
 
 async function updateItem(itemName, itemDescription, itemPrice, itemId) {
   const sql = "UPDATE Menu SET `name` = ?, `description` = ?, `price` = ? WHERE item_id = ?";
-  const dados = [itemName, itemDescription, itemPrice, itemId];
+  const data = [itemName, itemDescription, itemPrice, itemId];
 
   const conn = await database.connect();
-  await conn.query(sql, dados);
+  await conn.query(sql, data);
   conn.end();
 }
 
@@ -28,6 +28,17 @@ async function getItems() {
   return results;
 }
 
+async function getItem(itemId) {
+  const sql = "SELECT * FROM Menu WHERE id = ?";
+  const data = [itemId]
+
+  const conn = await database.connect();
+  const results = await conn.query(sql, data);
+  conn.end();
+
+  return results[0];
+}
+
 async function deleteItem(itemId) {
   const conn = await database.connect();
 
@@ -37,4 +48,4 @@ async function deleteItem(itemId) {
   conn.end();
 }
 
-export default { createItem, getItems, updateItem, deleteItem };
+export default { createItem, getItems, getItem, updateItem, deleteItem };

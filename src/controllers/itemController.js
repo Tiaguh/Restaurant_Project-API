@@ -41,6 +41,17 @@ routes.get('/get-items', async (req, res) => {
   }
 })
 
+routes.get('/get-item/:id', async (req, res) => {
+  const itemId = req.params.id
+
+  try {
+    let result = await db.getItem(itemId);
+    res.status(200).json(result[0]);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao obter os itens." });
+  }
+});
+
 routes.delete('/delete-item/:id', async (req, res) => {
   const itemId = req.params.id
 
