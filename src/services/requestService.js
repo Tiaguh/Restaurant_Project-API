@@ -45,6 +45,32 @@ async function newRequest(user_id) {
     conn.end();
 }
 
+async function getRequest(user_id) {
+    const sql = `
+        SELECT
+            R.id_request,
+            GROUP_CONCAT(CONCAT(Menu.name, ' (', It.quantity, ')') SEPARATOR ', ') AS items
+        FROM
+            Requests AS R
+        JOIN 
+            ItemRequests AS It ON R.id_request = It.id_request
+        JOIN
+            Menu ON It.item_id = Menu.id
+        JOIN
+            User AS U ON R.user_id = U.id
+        WHERE
+            R.user_id = ?
+        GROUP BY
+            R.id_request, R.user_id, R.status;    
+    `
+    const data = [user_id];
+
+    const conn = await database.connect();
+    const [rows] = await conn.query(sql, data);
+    conn.end();
+
+    return rows;
+}
 
 async function getAllRequests() {
     const sql = `
@@ -92,5 +118,4 @@ async function finalizeRequest(user_id) {
     conn.end();
 }
 
-export default { getUser, newRequest, getAllRequests, finalizeRequest };
-
+export default { getUser, newRequest, getAllRequests, getRequest, finalizeRequest };

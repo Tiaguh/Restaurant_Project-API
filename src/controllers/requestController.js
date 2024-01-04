@@ -12,6 +12,17 @@ routes.get("/get-all-requests", async (req, res) => {
     }
 })
 
+routes.get("/get-request/:user_id", async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        const requests = await db.getRequest(user_id);
+        res.status(200).json({ message: "Pedidos recebidos com sucesso!", requests })
+    } catch (error) {
+        res.status(400).json({ message: "Não foi possível pegar os pedidos." });
+    }
+})
+
 routes.post("/new-request/:user_id", async (req, res) => {
     const { user_id } = req.params;
 
