@@ -16,7 +16,7 @@ routes.post('/add-item', async (req, res) => {
   }
 });
 
-routes.post('/update-item/:id', async (req, res) => {
+routes.put('/update-item/:id', async (req, res) => {
   const itemId = req.params.id
 
   const { itemName, itemDescription, itemPrice } = req.body;
@@ -27,9 +27,8 @@ routes.post('/update-item/:id', async (req, res) => {
     await db.updateItem(itemName, itemDescription, itemPrice, itemId);
     res.status(200).send({ message: "Item atualizado com sucesso!" });
   } catch (err) {
-    res.status(500).json({ error: "Erro ao atualizar o item." });
+    res.status(500).json({err});
   }
-
 })
 
 routes.get('/get-items', async (req, res) => {

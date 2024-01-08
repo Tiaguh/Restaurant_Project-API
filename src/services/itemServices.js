@@ -10,7 +10,7 @@ async function createItem(itemName, itemDescription, itemPrice, imageUrl) {
 }
 
 async function updateItem(itemName, itemDescription, itemPrice, itemId) {
-  const sql = "UPDATE Menu SET `name` = ?, `description` = ?, `price` = ? WHERE item_id = ?";
+  const sql = "UPDATE Menu SET `name` = ?, `description` = ?, `price` = ? WHERE id = ?";
   const data = [itemName, itemDescription, itemPrice, itemId];
 
   const conn = await database.connect();

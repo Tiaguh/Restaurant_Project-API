@@ -45,7 +45,7 @@ async function newRequest(user_id) {
     conn.end();
 }
 
-async function getRequest(user_id) {
+async function getUserRequests(user_id) {
     const sql = `
         SELECT
             R.id_request,
@@ -104,18 +104,18 @@ async function getAllRequests() {
     return rows;
 }
 
-async function finalizeRequest(user_id) {
+async function finalizeRequest(id_request) {
     const sql = `
         UPDATE Requests 
         SET STATUS = 'FINALIZADO'
-        WHERE user_id = ? AND STATUS = 'Pendente';
+        WHERE id_request = ? AND STATUS = 'Pendente';
     `;
 
-    const data = [user_id];
+    const data = [id_request];
 
     const conn = await database.connect();
     await conn.query(sql, data);
     conn.end();
 }
 
-export default { getUser, newRequest, getAllRequests, getRequest, finalizeRequest };
+export default { getUser, newRequest, getAllRequests, getUserRequests, finalizeRequest };

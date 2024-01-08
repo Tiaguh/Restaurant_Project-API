@@ -12,11 +12,11 @@ routes.get("/get-all-requests", async (req, res) => {
     }
 })
 
-routes.get("/get-request/:user_id", async (req, res) => {
+routes.get("/get-user-requests/:user_id", async (req, res) => {
     const { user_id } = req.params;
 
     try {
-        const requests = await db.getRequest(user_id);
+        const requests = await db.getUserRequests(user_id);
         res.status(200).json({ message: "Pedidos recebidos com sucesso!", requests })
     } catch (error) {
         res.status(400).json({ message: "Não foi possível pegar os pedidos." });
@@ -38,16 +38,13 @@ routes.post("/new-request/:user_id", async (req, res) => {
     }
 })
 
-routes.put("/finalize-request/:user_id", async (req, res) => {
-    const { user_id } = req.params;
+routes.put("/finalize-request/:id_request", async (req, res) => {
+    // Validar se o pedido existe
+
+    const { id_request } = req.params;
 
     try {
-        const userExists = await db.getUser(user_id);
-        if (!userExists) {
-            return res.status(404).json({ message: "Usuário não encontrado" });
-        }
-
-        await db.finalizeRequest(user_id);
+        await db.finalizeRequest(id_request);
         res.status(200).json({ message: "Pedido finalizado com sucesso!" });
 
     } catch (err) {
