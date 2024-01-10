@@ -59,7 +59,7 @@ async function getUserRequests(user_id) {
         JOIN
             User AS U ON R.user_id = U.id
         WHERE
-            R.user_id = ?
+            R.user_id = ? AND R.status = 'Pendente'
         GROUP BY
             R.id_request, R.user_id, R.status;    
     `
