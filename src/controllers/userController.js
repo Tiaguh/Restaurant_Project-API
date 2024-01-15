@@ -6,11 +6,16 @@ const routes = express.Router();
 routes.post('/create-user', async (req, res) => {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) return res.status(400).json({ message: "Insira todos os dados" })
+    const userExists = await db.checkUserExist(email);
+    if (userExists) return res.status(404).json({ message: "Já existe uma conta vinculada a esse email." });
 
-    await db.createUser(name, email, password);
+    try {
+        await db.createUser(name, email, password);
 
-    res.status(200).send({ message: "Usuário criado com sucesso!" });
+        res.status(200).send({ message: "Usuário criado com sucesso!" });
+    } catch (err) {
+        res.status(500).json({ error: "Não foi possível criar sua conta." });
+    }
 });
 
 routes.get('/get-user/:id', async (req, res) => {

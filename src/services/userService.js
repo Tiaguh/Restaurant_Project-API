@@ -9,6 +9,17 @@ async function createUser(name, email, password) {
   conn.end();
 }
 
+async function checkUserExist(email) {
+  const sql = "SELECT * FROM User WHERE email = ?";
+  const dados = [email];
+
+  const conn = await database.connect();
+  const [rows] = await conn.query(sql, dados);
+  conn.end();
+
+  return rows.length > 0;
+}
+
 async function getUser(id) {
   const sql = "SELECT * FROM User WHERE id = ?";
   const dados = [id];
@@ -43,4 +54,4 @@ async function updateUser(id, updatedFields) {
       conn.end();
   }
 }
-export default { createUser, getUser, updateUser };
+export default { createUser, checkUserExist, getUser, updateUser };
