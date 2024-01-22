@@ -31,18 +31,21 @@ routes.get('/get-user/:id', async (req, res) => {
     }
 });
 
-routes.post('/update-user/:id', async (req, res) => {
+routes.put('/update-user/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, email, password, address } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!id || (!name && !email && !password && !address)) {
-        return res.status(400).json({ message: "Parâmetros inválidos" });
-    }
+    if (!id || !name || !email || !password) return res.status(400).json({ message: "Parâmetros inválidos" });
 
     try {
-        await db.updateUser(id, { name, email, password, address });
+        const response = await db.validPassword(id, password)
 
-        res.status(200).json({ message: "Perfil do usuário atualizado com sucesso!" });
+        if (response) {
+            await db.updateUser(id, name, email, password );
+            res.status(200).json({ message: "Perfil do usuário atualizado com sucesso!" });
+        } else {
+            res.status(500).json({ message: "Senha incorreta!" });
+        }
     } catch (err) {
         res.status(500).json({ error: "Não foi possível atualizar o perfil do usuário" });
     }

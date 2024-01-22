@@ -40,8 +40,6 @@ routes.post('/admin', async (req, res) => {
 routes.post('/client', async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) res.status(400).json({ message: "Insira todos os dados" });
-
   try {
     const users = await db.LoginClient(email, password);
 

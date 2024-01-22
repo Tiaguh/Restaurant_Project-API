@@ -31,27 +31,24 @@ async function getUser(id) {
   return rows[0];
 }
 
-async function updateUser(id, updatedFields) {
-  const fieldsToUpdate = ['name', 'email', 'password', 'address'];
-
-  const updates = fieldsToUpdate
-      .filter(field => updatedFields[field] !== undefined)
-      .map(field => `${field} = ?`);
-
-  if (!updates.length) {
-      throw new Error("Nenhum campo válido para atualizar");
-  }
-
-  const sql = `UPDATE User SET ${updates.join(', ')} WHERE id = ?`;
-  const data = fieldsToUpdate.map(field => updatedFields[field]);
-  data.push(id);
+async function validPassword(id, password) {
+  const sql = "SELECT * FROM User WHERE id = ? AND password = ?";
+  const dados = [id, password];
 
   const conn = await database.connect();
+  const [rows] = await conn.query(sql, dados);
+  conn.end();
 
-  try {
-      await conn.query(sql, data);
-  } finally {
-      conn.end();
-  }
+  return rows.length > 0;
 }
-export default { createUser, checkUserExist, getUser, updateUser };
+
+async function updateUser(id, name, email, password) {
+  const sql = `UPDATE User SET name = ?, email = ?, password = ? WHERE id = ?`;
+  const data = [name, email, password, id];
+
+  const conn = await database.connect();
+  await conn.query(sql, data);
+  conn.end();
+}
+
+export default { createUser, checkUserExist, getUser, validPassword, updateUser };
