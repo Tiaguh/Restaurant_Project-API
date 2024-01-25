@@ -31,9 +31,9 @@ async function getUser(id) {
   return rows[0];
 }
 
-async function validPassword(id, password) {
+async function validPassword(id, currentPassword) {
   const sql = "SELECT * FROM User WHERE id = ? AND password = ?";
-  const dados = [id, password];
+  const dados = [id, currentPassword];
 
   const conn = await database.connect();
   const [rows] = await conn.query(sql, dados);

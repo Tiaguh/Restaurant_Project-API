@@ -33,12 +33,12 @@ routes.get('/get-user/:id', async (req, res) => {
 
 routes.put('/update-user/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, email, password } = req.body;
+    const { name, email, password, currentPassword } = req.body;
 
-    if (!id || !name || !email || !password) return res.status(400).json({ message: "Parâmetros inválidos" });
+    if (!id || !name || !email || !password || !currentPassword) return res.status(400).json({ message: "Parâmetros inválidos" });
 
     try {
-        const response = await db.validPassword(id, password)
+        const response = await db.validPassword(id, currentPassword)
 
         if (response) {
             await db.updateUser(id, name, email, password );
