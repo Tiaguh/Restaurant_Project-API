@@ -58,6 +58,4 @@ routes.post('/client', async (req, res) => {
   }
 });
 
-
-
 export default routes;
