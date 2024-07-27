@@ -62,6 +62,7 @@ async function getCartItems(user_id) {
         M.description,
         M.name,
         M.price,
+        M.image_url,
         C.quantity
     FROM
         Cart AS C
