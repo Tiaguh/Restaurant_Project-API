@@ -42,10 +42,20 @@ async function getItem(itemId) {
 async function deleteItem(itemId) {
   const conn = await database.connect();
 
-  await conn.query("DELETE FROM ItemRequests WHERE item_id = ?", [itemId]);
-  await conn.query("DELETE FROM Menu WHERE id = ?", [itemId]);
+  try {
+    await conn.beginTransaction();
+    
+    await conn.query("DELETE FROM cart WHERE item_id = ?", [itemId]);
+    await conn.query("DELETE FROM ItemRequests WHERE item_id = ?", [itemId]);
+    await conn.query("DELETE FROM Menu WHERE id = ?", [itemId]);
 
-  conn.end();
+    await conn.commit();
+
+    conn.end();
+  } catch (err) {
+    await conn.rollback();
+    console.error('Erro ao deletar item do banco de dados:', err);
+    throw err;
+  }
 }
-
 export default { createItem, getItems, getItem, updateItem, deleteItem };

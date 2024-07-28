@@ -54,15 +54,16 @@ routes.get('/get-item/:id', async (req, res) => {
 });
 
 routes.delete('/delete-item/:id', async (req, res) => {
-  const itemId = req.params.id
+  const itemId = req.params.id;
 
   try {
     await db.deleteItem(itemId);
     res.status(200).send({ message: "Excluído com sucesso!" });
   } catch (err) {
+    console.error('Erro ao deletar o item:', err);
     res.status(500).json({ error: "Erro ao excluir o item." });
   }
-})
+});
 
 
 export default routes;
